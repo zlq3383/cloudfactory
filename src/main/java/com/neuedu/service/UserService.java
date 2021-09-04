@@ -7,4 +7,6 @@ public interface UserService {
 
 	 public FactoryResult login(User user);
 
+	public FactoryResult getUserPermitsById(Integer id);
+
 }

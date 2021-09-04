@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.neuedu.mapper.ProductScheduleMapper" >
-  <resultMap id="BaseResultMap" type="com.neuedu.pojo.ProductSchedule" >
+<mapper namespace="com.neuedu.mapper.ProductOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.neuedu.pojo.ProductOrder" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="flag" property="flag" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
-    <result column="schedule_seq" property="scheduleSeq" jdbcType="VARCHAR" />
-    <result column="schedule_count" property="scheduleCount" jdbcType="INTEGER" />
-    <result column="schedule_status" property="scheduleStatus" jdbcType="INTEGER" />
-    <result column="plan_id" property="planId" jdbcType="INTEGER" />
+    <result column="order_seq" property="orderSeq" jdbcType="VARCHAR" />
+    <result column="order_source" property="orderSource" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
-    <result column="equipment_id" property="equipmentId" jdbcType="INTEGER" />
-    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="product_count" property="productCount" jdbcType="INTEGER" />
     <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
     <result column="factory_id" property="factoryId" jdbcType="INTEGER" />
+    <result column="factory_yield" property="factoryYield" jdbcType="INTEGER" />
+    <result column="bidding_end_date" property="biddingEndDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,16 +77,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, flag, create_time, create_userid, update_time, update_userid, schedule_seq, schedule_count, 
-    schedule_status, plan_id, product_id, equipment_id, start_date, end_date, factory_id
+    id, flag, create_time, create_userid, update_time, update_userid, order_seq, order_source, 
+    product_id, product_count, end_date, order_status, factory_id, factory_yield, bidding_end_date
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.neuedu.pojo.ProductScheduleExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.neuedu.pojo.ProductOrderExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_product_schedule
+    from t_product_order
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -97,35 +97,35 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_product_schedule
+    from t_product_order
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_product_schedule
+    delete from t_product_order
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.neuedu.pojo.ProductScheduleExample" >
-    delete from t_product_schedule
+  <delete id="deleteByExample" parameterType="com.neuedu.pojo.ProductOrderExample" >
+    delete from t_product_order
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.neuedu.pojo.ProductSchedule" >
-    insert into t_product_schedule (id, flag, create_time, 
+  <insert id="insert" parameterType="com.neuedu.pojo.ProductOrder" >
+    insert into t_product_order (id, flag, create_time, 
       create_userid, update_time, update_userid, 
-      schedule_seq, schedule_count, schedule_status, 
-      plan_id, product_id, equipment_id, 
-      start_date, end_date, factory_id
+      order_seq, order_source, product_id, 
+      product_count, end_date, order_status, 
+      factory_id, factory_yield, bidding_end_date
       )
     values (#{id,jdbcType=INTEGER}, #{flag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUserid,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserid,jdbcType=INTEGER}, 
-      #{scheduleSeq,jdbcType=VARCHAR}, #{scheduleCount,jdbcType=INTEGER}, #{scheduleStatus,jdbcType=INTEGER}, 
-      #{planId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{equipmentId,jdbcType=INTEGER}, 
-      #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{factoryId,jdbcType=INTEGER}
+      #{orderSeq,jdbcType=VARCHAR}, #{orderSource,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
+      #{productCount,jdbcType=INTEGER}, #{endDate,jdbcType=DATE}, #{orderStatus,jdbcType=INTEGER}, 
+      #{factoryId,jdbcType=INTEGER}, #{factoryYield,jdbcType=INTEGER}, #{biddingEndDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.neuedu.pojo.ProductSchedule" >
-    insert into t_product_schedule
+  <insert id="insertSelective" parameterType="com.neuedu.pojo.ProductOrder" >
+    insert into t_product_order
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -145,32 +145,32 @@
       <if test="updateUserid != null" >
         update_userid,
       </if>
-      <if test="scheduleSeq != null" >
-        schedule_seq,
+      <if test="orderSeq != null" >
+        order_seq,
       </if>
-      <if test="scheduleCount != null" >
-        schedule_count,
-      </if>
-      <if test="scheduleStatus != null" >
-        schedule_status,
-      </if>
-      <if test="planId != null" >
-        plan_id,
+      <if test="orderSource != null" >
+        order_source,
       </if>
       <if test="productId != null" >
         product_id,
       </if>
-      <if test="equipmentId != null" >
-        equipment_id,
-      </if>
-      <if test="startDate != null" >
-        start_date,
+      <if test="productCount != null" >
+        product_count,
       </if>
       <if test="endDate != null" >
         end_date,
       </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
       <if test="factoryId != null" >
         factory_id,
+      </if>
+      <if test="factoryYield != null" >
+        factory_yield,
+      </if>
+      <if test="biddingEndDate != null" >
+        bidding_end_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -192,43 +192,43 @@
       <if test="updateUserid != null" >
         #{updateUserid,jdbcType=INTEGER},
       </if>
-      <if test="scheduleSeq != null" >
-        #{scheduleSeq,jdbcType=VARCHAR},
+      <if test="orderSeq != null" >
+        #{orderSeq,jdbcType=VARCHAR},
       </if>
-      <if test="scheduleCount != null" >
-        #{scheduleCount,jdbcType=INTEGER},
-      </if>
-      <if test="scheduleStatus != null" >
-        #{scheduleStatus,jdbcType=INTEGER},
-      </if>
-      <if test="planId != null" >
-        #{planId,jdbcType=INTEGER},
+      <if test="orderSource != null" >
+        #{orderSource,jdbcType=INTEGER},
       </if>
       <if test="productId != null" >
         #{productId,jdbcType=INTEGER},
       </if>
-      <if test="equipmentId != null" >
-        #{equipmentId,jdbcType=INTEGER},
-      </if>
-      <if test="startDate != null" >
-        #{startDate,jdbcType=DATE},
+      <if test="productCount != null" >
+        #{productCount,jdbcType=INTEGER},
       </if>
       <if test="endDate != null" >
         #{endDate,jdbcType=DATE},
       </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
       <if test="factoryId != null" >
         #{factoryId,jdbcType=INTEGER},
       </if>
+      <if test="factoryYield != null" >
+        #{factoryYield,jdbcType=INTEGER},
+      </if>
+      <if test="biddingEndDate != null" >
+        #{biddingEndDate,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.neuedu.pojo.ProductScheduleExample" resultType="java.lang.Integer" >
-    select count(*) from t_product_schedule
+  <select id="countByExample" parameterType="com.neuedu.pojo.ProductOrderExample" resultType="java.lang.Integer" >
+    select count(*) from t_product_order
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update t_product_schedule
+    update t_product_order
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -248,32 +248,32 @@
       <if test="record.updateUserid != null" >
         update_userid = #{record.updateUserid,jdbcType=INTEGER},
       </if>
-      <if test="record.scheduleSeq != null" >
-        schedule_seq = #{record.scheduleSeq,jdbcType=VARCHAR},
+      <if test="record.orderSeq != null" >
+        order_seq = #{record.orderSeq,jdbcType=VARCHAR},
       </if>
-      <if test="record.scheduleCount != null" >
-        schedule_count = #{record.scheduleCount,jdbcType=INTEGER},
-      </if>
-      <if test="record.scheduleStatus != null" >
-        schedule_status = #{record.scheduleStatus,jdbcType=INTEGER},
-      </if>
-      <if test="record.planId != null" >
-        plan_id = #{record.planId,jdbcType=INTEGER},
+      <if test="record.orderSource != null" >
+        order_source = #{record.orderSource,jdbcType=INTEGER},
       </if>
       <if test="record.productId != null" >
         product_id = #{record.productId,jdbcType=INTEGER},
       </if>
-      <if test="record.equipmentId != null" >
-        equipment_id = #{record.equipmentId,jdbcType=INTEGER},
-      </if>
-      <if test="record.startDate != null" >
-        start_date = #{record.startDate,jdbcType=DATE},
+      <if test="record.productCount != null" >
+        product_count = #{record.productCount,jdbcType=INTEGER},
       </if>
       <if test="record.endDate != null" >
         end_date = #{record.endDate,jdbcType=DATE},
       </if>
+      <if test="record.orderStatus != null" >
+        order_status = #{record.orderStatus,jdbcType=INTEGER},
+      </if>
       <if test="record.factoryId != null" >
         factory_id = #{record.factoryId,jdbcType=INTEGER},
+      </if>
+      <if test="record.factoryYield != null" >
+        factory_yield = #{record.factoryYield,jdbcType=INTEGER},
+      </if>
+      <if test="record.biddingEndDate != null" >
+        bidding_end_date = #{record.biddingEndDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -281,28 +281,28 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update t_product_schedule
+    update t_product_order
     set id = #{record.id,jdbcType=INTEGER},
       flag = #{record.flag,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_userid = #{record.createUserid,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_userid = #{record.updateUserid,jdbcType=INTEGER},
-      schedule_seq = #{record.scheduleSeq,jdbcType=VARCHAR},
-      schedule_count = #{record.scheduleCount,jdbcType=INTEGER},
-      schedule_status = #{record.scheduleStatus,jdbcType=INTEGER},
-      plan_id = #{record.planId,jdbcType=INTEGER},
+      order_seq = #{record.orderSeq,jdbcType=VARCHAR},
+      order_source = #{record.orderSource,jdbcType=INTEGER},
       product_id = #{record.productId,jdbcType=INTEGER},
-      equipment_id = #{record.equipmentId,jdbcType=INTEGER},
-      start_date = #{record.startDate,jdbcType=DATE},
+      product_count = #{record.productCount,jdbcType=INTEGER},
       end_date = #{record.endDate,jdbcType=DATE},
-      factory_id = #{record.factoryId,jdbcType=INTEGER}
+      order_status = #{record.orderStatus,jdbcType=INTEGER},
+      factory_id = #{record.factoryId,jdbcType=INTEGER},
+      factory_yield = #{record.factoryYield,jdbcType=INTEGER},
+      bidding_end_date = #{record.biddingEndDate,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.neuedu.pojo.ProductSchedule" >
-    update t_product_schedule
+  <update id="updateByPrimaryKeySelective" parameterType="com.neuedu.pojo.ProductOrder" >
+    update t_product_order
     <set >
       <if test="flag != null" >
         flag = #{flag,jdbcType=INTEGER},
@@ -319,52 +319,58 @@
       <if test="updateUserid != null" >
         update_userid = #{updateUserid,jdbcType=INTEGER},
       </if>
-      <if test="scheduleSeq != null" >
-        schedule_seq = #{scheduleSeq,jdbcType=VARCHAR},
+      <if test="orderSeq != null" >
+        order_seq = #{orderSeq,jdbcType=VARCHAR},
       </if>
-      <if test="scheduleCount != null" >
-        schedule_count = #{scheduleCount,jdbcType=INTEGER},
-      </if>
-      <if test="scheduleStatus != null" >
-        schedule_status = #{scheduleStatus,jdbcType=INTEGER},
-      </if>
-      <if test="planId != null" >
-        plan_id = #{planId,jdbcType=INTEGER},
+      <if test="orderSource != null" >
+        order_source = #{orderSource,jdbcType=INTEGER},
       </if>
       <if test="productId != null" >
         product_id = #{productId,jdbcType=INTEGER},
       </if>
-      <if test="equipmentId != null" >
-        equipment_id = #{equipmentId,jdbcType=INTEGER},
-      </if>
-      <if test="startDate != null" >
-        start_date = #{startDate,jdbcType=DATE},
+      <if test="productCount != null" >
+        product_count = #{productCount,jdbcType=INTEGER},
       </if>
       <if test="endDate != null" >
         end_date = #{endDate,jdbcType=DATE},
       </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
       <if test="factoryId != null" >
         factory_id = #{factoryId,jdbcType=INTEGER},
+      </if>
+      <if test="factoryYield != null" >
+        factory_yield = #{factoryYield,jdbcType=INTEGER},
+      </if>
+      <if test="biddingEndDate != null" >
+        bidding_end_date = #{biddingEndDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.neuedu.pojo.ProductSchedule" >
-    update t_product_schedule
+  <update id="updateByPrimaryKey" parameterType="com.neuedu.pojo.ProductOrder" >
+    update t_product_order
     set flag = #{flag,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_userid = #{createUserid,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_userid = #{updateUserid,jdbcType=INTEGER},
-      schedule_seq = #{scheduleSeq,jdbcType=VARCHAR},
-      schedule_count = #{scheduleCount,jdbcType=INTEGER},
-      schedule_status = #{scheduleStatus,jdbcType=INTEGER},
-      plan_id = #{planId,jdbcType=INTEGER},
+      order_seq = #{orderSeq,jdbcType=VARCHAR},
+      order_source = #{orderSource,jdbcType=INTEGER},
       product_id = #{productId,jdbcType=INTEGER},
-      equipment_id = #{equipmentId,jdbcType=INTEGER},
-      start_date = #{startDate,jdbcType=DATE},
+      product_count = #{productCount,jdbcType=INTEGER},
       end_date = #{endDate,jdbcType=DATE},
-      factory_id = #{factoryId,jdbcType=INTEGER}
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      factory_id = #{factoryId,jdbcType=INTEGER},
+      factory_yield = #{factoryYield,jdbcType=INTEGER},
+      bidding_end_date = #{biddingEndDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 根据产品id找到对应的不能删除的产品订单 -->
+  <select id="selectEnDelProOrdersByProId" resultMap="BaseResultMap" parameterType="int" >
+    select <include refid="Base_Column_List" />
+    from t_product_order
+    where product_id=#{value} and order_status in (20,40,50,60)
+  </select>
 </mapper>

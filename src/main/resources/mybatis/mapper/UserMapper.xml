@@ -369,11 +369,45 @@
       factory_id = #{factoryId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
+  <!-- 登录 -->
   <select id="login" parameterType="User" resultMap="BaseResultMap">
         select 
         <include refid="Base_Column_List" />
         from t_user 
         where user_name=#{userName} and user_passwd=#{userPasswd}
     </select>
+    <!--根据用户id查询用户权限 -->
+    <resultMap id="getUserPermitsByIdMap" type="com.neuedu.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_real_name" property="userRealName" jdbcType="VARCHAR" />
+    <result column="user_passwd" property="userPasswd" jdbcType="VARCHAR" />
+    <result column="user_job_num" property="userJobNum" jdbcType="VARCHAR" />
+    <result column="user_phone_num" property="userPhoneNum" jdbcType="CHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="factory_id" property="factoryId" jdbcType="INTEGER" />
+    <collection property="permits" ofType="Permit">
+	    <id column="pid" property="id" jdbcType="INTEGER" />
+	    <result column="pflag" property="flag" jdbcType="INTEGER" />
+	    <result column="pstatus" property="status" jdbcType="INTEGER" />
+	    <result column="pparent_id" property="parentId" jdbcType="INTEGER" />
+	    <result column="permit_name" property="permitName" jdbcType="VARCHAR" />
+	    <result column="permit_icon" property="permitIcon" jdbcType="VARCHAR" />
+	    <result column="permit_path" property="permitPath" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+   <select id="getUserPermitsById" parameterType="int" resultMap="getUserPermitsByIdMap">
+        select u.id, u.flag, u.create_time, u.create_userid, u.update_time, u.update_userid, u.user_status, u.user_name, 
+			    u.user_real_name, u.user_passwd, u.user_job_num, u.user_phone_num, u.user_email, u.role_id, u.factory_id, 
+			    p.id pid, p.flag pflag, p.status pstatus, p.parent_id pparent_id, p.permit_name, p.permit_icon, p.permit_path
+		from t_user u,t_role_permit r,t_permit p
+		where u.role_id=r.role_id and r.permit_id = p.id and u.id=#{value}
+    </select> 
 </mapper>

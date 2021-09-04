@@ -10,14 +10,18 @@ import com.neuedu.pojo.User;
 import com.neuedu.service.UserService;
 import com.neuedu.utils.FactoryResult;
 
+/** 
+* @author 作者 : 赵灵巧
+* @version 创建时间：2021年9月2日 上午10:17:06 
+*/
 @RestController
 @CrossOrigin
-public class LoginController {
-	@Autowired
+public class UserController {
+	@Autowired(required = false)
 	private UserService userService;
-	@PostMapping("/login")
-	public FactoryResult login(@RequestBody User user) {
-		FactoryResult result=userService.login(user);
-		return result;
+	
+	@PostMapping("/getUserPermitsById")
+	public FactoryResult getUserPermitsById(@RequestBody User user) {
+		return userService.getUserPermitsById(user.getId());
 	}
 }

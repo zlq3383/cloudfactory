@@ -3,10 +3,6 @@ package com.neuedu.pojo;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,5 +35,7 @@ public class ProductType {
     private User updateUser;
     //一对多，获取子类
     private List<ProductType> children;
+    //一对多，获取产品
+    public List<Product> products;
    
 }

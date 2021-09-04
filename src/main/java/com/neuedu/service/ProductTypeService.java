@@ -23,6 +23,11 @@ public interface ProductTypeService {
 
 	FactoryResult deleteProType(Integer id);
 
-	FactoryResult deleteProType(List<Integer> ids);
+	FactoryResult deleteProTypes(int[] ids);
+
+	FactoryResult findProTypeAndChildrenValid();
+
+	FactoryResult findOneClassProTypeValid();
+
 
 }

@@ -256,6 +256,7 @@
       parent_id = #{parentId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
   <!-- 通过parentid获取所有数据 -->
   <resultMap type="ProductType" id="findAllProTypeByIdsMap">
   	<id column="id" property="id" jdbcType="INTEGER" />
@@ -271,7 +272,6 @@
   	<association property="updateUser" javaType="User" select="com.neuedu.mapper.UserMapper.selectByPrimaryKey" column="update_userid"></association>
   	<collection property="children" select="findChildrenById" column="id"></collection>
   </resultMap>
-
   <select id="findAllProTypeByIds" parameterType="int" resultMap="findAllProTypeByIdsMap">
   select <include refid="Base_Column_List" />
   from t_product_type
@@ -286,7 +286,7 @@
   </where>
   </select>
   
-  <!-- 根据id获取所有字类 -->
+  <!-- 根据id获取所有子类 -->
   <select id="findChildrenById" parameterType="int" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List" />
   	from t_product_type
@@ -311,12 +311,45 @@
   	where parent_id is null
   </select>
   
+  <!-- 根据id获取所有子类,只包括有效的 -->
+  <select id="findChildrenByIdValid" parameterType="int" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type
+  	where parent_id=#{value} and flag=0
+  </select>
+  
+  <!-- 获取所有产品类别及其子类,只包括有效的 -->
+  <resultMap type="ProductType" id="findProTypeAndChildrenValidMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <collection property="children" select="findChildrenByIdValid" column="id"></collection>
+    </resultMap>
+  <select id="findProTypeAndChildrenValid" resultMap="findProTypeAndChildrenValidMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type 
+  	where parent_id is null and flag=0
+  </select>
+  
   <!-- 获取所有一级分类 -->
   <select id="findOneClassProType" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List" />
   	from t_product_type 
   	where parent_id is null
   </select>
+  
+  <!-- 获取所有一级分类,只包括有效的-->
+  <select id="findOneClassProTypeValid" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type 
+  	where parent_id is null and flag=0
+  </select>
+  
   <!-- 批量增加产品类别 -->
   <insert id="addProTypeList">
    insert into t_product_type (product_type_name,parent_id,create_userid,create_time) values
@@ -324,6 +357,7 @@
         (#{item.productTypeName},#{item.parentId},#{item.createUserid},#{item.createTime})
       </foreach>
   </insert>
+  
   <!-- 修改产品类别信息 -->
     <update id="updateProType" parameterType="ProductType" >
     update t_product_type
@@ -340,5 +374,78 @@
         parent_id = #{parentId,jdbcType=INTEGER},
     </set>
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 批量删除   获取根据产品类别Id数组,获取产品类别以及子类别下的产品所对应的不能删除订单 -->
+  <resultMap type="ProductType" id="selectProOrdersByIdsMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+   	<collection property="children" select="selectChildrenAndProductsById" column="id"></collection>
+   	<collection property="products" select="com.neuedu.mapper.ProductMapper.selectProductsByProTypeId" column="id"></collection>
+  </resultMap>
+  <select id="selectProOrdersByIds" resultMap="selectProOrdersByIdsMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type 
+  	where
+  	<if test="ids != null and ids.length>0">
+	  	id IN
+	  	<foreach collection="ids" index="index" item="item"
+	             open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+  	</if>
+  </select>
+  
+  <!-- 删除          获取根据产品类别Id数组,获取产品类别以及子类别下的产品所对应的不能删除订单-->
+  <resultMap type="ProductType" id="selectProOrdersByIdMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+   	<collection property="children" select="selectChildrenAndProductsById" column="id"></collection>
+   	<collection property="products" select="com.neuedu.mapper.ProductMapper.selectProductsByProTypeId" column="id"></collection>
+  </resultMap>
+  <select id="selectProOrdersById" resultMap="selectProOrdersByIdMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type 
+  	where id=#{value}
+  </select>
+  
+  <!-- 根据id获取所有子类以及子类对应的产品所对应的不能删除订单-->
+  <resultMap type="ProductType" id="selectChildrenAndProductsByIdMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+   	<collection property="products" select="com.neuedu.mapper.ProductMapper.selectProductsByProTypeId" column="id"></collection>
+  </resultMap>
+  <select id="selectChildrenAndProductsById" parameterType="int" resultMap="selectChildrenAndProductsByIdMap">
+  	select <include refid="Base_Column_List" />
+  	from t_product_type
+  	where parent_id=#{value}
+  </select>
+  
+  <!-- 删除产品类型 -->
+  <update id="deleteProType" parameterType="int">
+    update t_product_type set flag=1 where id = #{value}
+  </update>
+  
+  <!-- 删除产品类型的子类 -->
+  <update id="deleteProTypeChildren" parameterType="int">
+    update t_product_type set flag=1 where parent_id = #{value}
   </update>
 </mapper>

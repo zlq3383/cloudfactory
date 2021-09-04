@@ -981,6 +981,66 @@ public class ProductOrderExample {
             addCriterion("factory_yield not between", value1, value2, "factoryYield");
             return (Criteria) this;
         }
+
+        public Criteria andBiddingEndDateIsNull() {
+            addCriterion("bidding_end_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateIsNotNull() {
+            addCriterion("bidding_end_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateEqualTo(Date value) {
+            addCriterion("bidding_end_date =", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateNotEqualTo(Date value) {
+            addCriterion("bidding_end_date <>", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateGreaterThan(Date value) {
+            addCriterion("bidding_end_date >", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("bidding_end_date >=", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateLessThan(Date value) {
+            addCriterion("bidding_end_date <", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateLessThanOrEqualTo(Date value) {
+            addCriterion("bidding_end_date <=", value, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateIn(List<Date> values) {
+            addCriterion("bidding_end_date in", values, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateNotIn(List<Date> values) {
+            addCriterion("bidding_end_date not in", values, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateBetween(Date value1, Date value2) {
+            addCriterion("bidding_end_date between", value1, value2, "biddingEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBiddingEndDateNotBetween(Date value1, Date value2) {
+            addCriterion("bidding_end_date not between", value1, value2, "biddingEndDate");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
